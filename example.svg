@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景圆 -->
+  <circle cx="100" cy="100" r="80" fill="#4CAF50" stroke="#2E7D32" stroke-width="4"/>
+  
+  <!-- 中心星形 -->
+  <polygon points="100,40 110,70 140,70 118,92 128,122 100,108 72,122 82,92 60,70 90,70" 
+           fill="#FFD700" stroke="#FFA000" stroke-width="2"/>
+  
+  <!-- 文字标签 -->
+  <text x="100" y="160" text-anchor="middle" font-family="Arial, sans-serif" 
+        font-size="16" fill="#FFFFFF" font-weight="bold">SVG示例</text>
+</svg> 
