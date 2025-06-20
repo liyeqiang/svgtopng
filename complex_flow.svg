@@ -1,0 +1,50 @@
+<svg aria-roledescription="flowchart-v2" role="graphics-document document" viewBox="-8 -8 529 2064.75" style="max-width: 529px;" xmlns="http://www.w3.org/2000/svg" width="100%" id="mermaid-svg-1750384263723-nlck7h4vr">
+<style>
+#mermaid-svg-1750384263723-nlck7h4vr{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:rgba(204, 204, 204, 0.87);}
+#mermaid-svg-1750384263723-nlck7h4vr .error-icon{fill:#bf616a;}
+#mermaid-svg-1750384263723-nlck7h4vr .error-text{fill:#bf616a;stroke:#bf616a;}
+#mermaid-svg-1750384263723-nlck7h4vr .edge-thickness-normal{stroke-width:2px;}
+#mermaid-svg-1750384263723-nlck7h4vr .edge-thickness-thick{stroke-width:3.5px;}
+#mermaid-svg-1750384263723-nlck7h4vr .edge-pattern-solid{stroke-dasharray:0;}
+#mermaid-svg-1750384263723-nlck7h4vr .edge-pattern-dashed{stroke-dasharray:3;}
+#mermaid-svg-1750384263723-nlck7h4vr .edge-pattern-dotted{stroke-dasharray:2;}
+#mermaid-svg-1750384263723-nlck7h4vr .marker{fill:rgba(204, 204, 204, 0.87);stroke:rgba(204, 204, 204, 0.87);}
+#mermaid-svg-1750384263723-nlck7h4vr .marker.cross{stroke:rgba(204, 204, 204, 0.87);}
+#mermaid-svg-1750384263723-nlck7h4vr svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}
+#mermaid-svg-1750384263723-nlck7h4vr .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:rgba(204, 204, 204, 0.87);}
+#mermaid-svg-1750384263723-nlck7h4vr .cluster-label text{fill:#ffffff;}
+#mermaid-svg-1750384263723-nlck7h4vr .cluster-label span,#mermaid-svg-1750384263723-nlck7h4vr p{color:#ffffff;}
+#mermaid-svg-1750384263723-nlck7h4vr .label text,#mermaid-svg-1750384263723-nlck7h4vr span,#mermaid-svg-1750384263723-nlck7h4vr p{fill:rgba(204, 204, 204, 0.87);color:rgba(204, 204, 204, 0.87);}
+#mermaid-svg-1750384263723-nlck7h4vr .node rect,#mermaid-svg-1750384263723-nlck7h4vr .node circle,#mermaid-svg-1750384263723-nlck7h4vr .node ellipse,#mermaid-svg-1750384263723-nlck7h4vr .node polygon,#mermaid-svg-1750384263723-nlck7h4vr .node path{fill:#1a1a1a;stroke:#2a2a2a;stroke-width:1px;}
+#mermaid-svg-1750384263723-nlck7h4vr .flowchart-label text{text-anchor:middle;}
+#mermaid-svg-1750384263723-nlck7h4vr .node .label{text-align:center;}
+#mermaid-svg-1750384263723-nlck7h4vr .node.clickable{cursor:pointer;}
+#mermaid-svg-1750384263723-nlck7h4vr .arrowheadPath{fill:#e5e5e5;}
+#mermaid-svg-1750384263723-nlck7h4vr .edgePath .path{stroke:rgba(204, 204, 204, 0.87);stroke-width:2.0px;}
+#mermaid-svg-1750384263723-nlck7h4vr .flowchart-link{stroke:rgba(204, 204, 204, 0.87);fill:none;}
+#mermaid-svg-1750384263723-nlck7h4vr .edgeLabel{background-color:#1a1a1a99;text-align:center;}
+#mermaid-svg-1750384263723-nlck7h4vr .edgeLabel rect{opacity:0.5;background-color:#1a1a1a99;fill:#1a1a1a99;}
+#mermaid-svg-1750384263723-nlck7h4vr .labelBkg{background-color:rgba(26, 26, 26, 0.5);}
+#mermaid-svg-1750384263723-nlck7h4vr .cluster rect{fill:rgba(64, 64, 64, 0.47);stroke:#30373a;stroke-width:1px;}
+#mermaid-svg-1750384263723-nlck7h4vr .cluster text{fill:#ffffff;}
+#mermaid-svg-1750384263723-nlck7h4vr .cluster span,#mermaid-svg-1750384263723-nlck7h4vr p{color:#ffffff;}
+#mermaid-svg-1750384263723-nlck7h4vr div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:#88c0d0;border:1px solid #30373a;border-radius:2px;pointer-events:none;z-index:100;}
+#mermaid-svg-1750384263723-nlck7h4vr .flowchartTitleText{text-anchor:middle;font-size:18px;fill:rgba(204, 204, 204, 0.87);}
+#mermaid-svg-1750384263723-nlck7h4vr :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}
+</style>
+<g><marker orient="auto" markerHeight="12" markerWidth="12" markerUnits="userSpaceOnUse" refY="5" refX="6" viewBox="0 0 10 10" class="marker flowchart" id="mermaid-svg-1750384263723-nlck7h4vr_flowchart-pointEnd"><path style="stroke-width: 1; stroke-dasharray: 1, 0;" class="arrowMarkerPath" d="M 0 0 L 10 5 L 0 10 z"/></marker>
+<g class="root">
+<g class="clusters"/>
+<g class="edgePaths">
+<path marker-end="url(#mermaid-svg-1750384263723-nlck7h4vr_flowchart-pointEnd)" style="fill:none;" class="edge-thickness-normal edge-pattern-solid flowchart-link LS-A LE-B" id="L-A-B-0" d="M248.5,39L248.5,43.167C248.5,47.333,248.5,55.667,248.5,63.117C248.5,70.567,248.5,77.133,248.5,80.417L248.5,83.7"/>
+</g>
+<g class="edgeLabels">
+<g transform="translate(147.0625, 649.375)" class="edgeLabel"><g transform="translate(-32, -12)" class="label"><foreignObject height="24" width="64"><div style="display: inline-block; white-space: nowrap;" xmlns="http://www.w3.org/1999/xhtml"><span class="edgeLabel">文件存在</span></div></foreignObject></g></g>
+</g>
+<g class="nodes">
+<g transform="translate(248.5, 19.5)" id="flowchart-A-260" class="node default default flowchart-label"><rect height="39" width="79" y="-19.5" x="-39.5" ry="0" rx="0" style="" class="basic label-container"/><g transform="translate(-32, -12)" style="" class="label"><rect/><foreignObject height="24" width="64"><div style="display: inline-block; white-space: nowrap;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel">系统启动</span></div></foreignObject></g></g>
+<g transform="translate(248.5, 108.5)" id="flowchart-B-261" class="node default default flowchart-label"><rect height="39" width="95" y="-19.5" x="-47.5" ry="0" rx="0" style="" class="basic label-container"/><g transform="translate(-40, -12)" style="" class="label"><rect/><foreignObject height="24" width="80"><div style="display: inline-block; white-space: nowrap;" xmlns="http://www.w3.org/1999/xhtml"><span class="nodeLabel">模块初始化</span></div></foreignObject></g></g>
+</g>
+</g>
+</g>
+</svg> 
