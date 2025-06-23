@@ -12,6 +12,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -37,6 +38,7 @@ type ConvertOptions struct {
 	BrowserRender   bool
 	BrowserTimeout  int
 	BrowserHeadless bool
+	PreprocessSVG   bool
 }
 
 func main() {
@@ -56,6 +58,7 @@ func main() {
 	flag.BoolVar(&opts.BrowserRender, "browser", false, "使用浏览器渲染模式（提供更好的兼容性）")
 	flag.IntVar(&opts.BrowserTimeout, "timeout", 30, "浏览器渲染超时时间（秒）")
 	flag.BoolVar(&opts.BrowserHeadless, "headless", true, "无头浏览器模式")
+	flag.BoolVar(&opts.PreprocessSVG, "preprocess", false, "预处理SVG")
 
 	flag.Parse()
 
@@ -123,6 +126,40 @@ func batchConvert(opts *ConvertOptions) error {
 	return nil
 }
 
+func preprocessSVG(svgContent string) string {
+	// 清理SVG内容，修复常见的渲染问题
+
+	// 1. 替换半透明的浅色为可见颜色
+	rgbaPattern := regexp.MustCompile(`rgba\(\s*204\s*,\s*204\s*,\s*204\s*,\s*[\d.]+\s*\)`)
+	svgContent = rgbaPattern.ReplaceAllString(svgContent, "#333333")
+
+	// 2. 替换其他浅色
+	lightColors := map[string]string{
+		"#cccccc":                "#333333",
+		"#e5e5e5":                "#333333",
+		"#f0f0f0":                "#666666",
+		"rgba(229, 229, 229, 1)": "#333333",
+	}
+
+	for old, new := range lightColors {
+		svgContent = strings.ReplaceAll(svgContent, old, new)
+	}
+
+	// 3. 确保文本填充颜色可见
+	textFillPattern := regexp.MustCompile(`(text[^>]*fill\s*=\s*["'])([^"']*)(["'])`)
+	svgContent = textFillPattern.ReplaceAllString(svgContent, "${1}#000000${3}")
+
+	// 4. 增强描边宽度
+	strokeWidthPattern := regexp.MustCompile(`stroke-width:\s*[\d.]*px`)
+	svgContent = strokeWidthPattern.ReplaceAllString(svgContent, "stroke-width: 2px")
+
+	// 5. 移除可能的透明度设置
+	opacityPattern := regexp.MustCompile(`opacity:\s*[\d.]+;?`)
+	svgContent = opacityPattern.ReplaceAllString(svgContent, "")
+
+	return svgContent
+}
+
 func convertSingleFile(opts *ConvertOptions) error {
 	if opts.OutputFile == "" {
 		// 如果没有指定输出文件，使用输入文件名但改为.png扩展名
@@ -136,19 +173,30 @@ func convertSingleFile(opts *ConvertOptions) error {
 		return fmt.Errorf("读取SVG文件失败: %v", err)
 	}
 
+	svgStr := string(svgContent)
+
+	// SVG预处理
+	if opts.PreprocessSVG || opts.BrowserRender {
+		originalSize := len(svgStr)
+		svgStr = preprocessSVG(svgStr)
+		if opts.Verbose {
+			fmt.Printf("SVG预处理: %d → %d 字节\n", originalSize, len(svgStr))
+		}
+	}
+
 	if opts.Verbose {
 		mode := "库渲染"
 		if opts.BrowserRender {
 			mode = "浏览器渲染"
 		}
-		fmt.Printf("读取SVG文件: %s (大小: %d 字节) - 模式: %s\n", opts.InputFile, len(svgContent), mode)
+		fmt.Printf("读取SVG文件: %s (大小: %d 字节) - 模式: %s\n", opts.InputFile, len(svgStr), mode)
 	}
 
 	// 选择渲染方式
 	if opts.BrowserRender {
-		err = convertSVGToPNGBrowser(string(svgContent), opts.OutputFile, opts)
+		err = convertSVGToPNGBrowser(svgStr, opts.OutputFile, opts)
 	} else {
-		err = convertSVGToPNG(string(svgContent), opts.OutputFile, opts)
+		err = convertSVGToPNG(svgStr, opts.OutputFile, opts)
 	}
 
 	if err != nil {
@@ -187,42 +235,89 @@ func createSVGHTML(svgContent string, opts *ConvertOptions) string {
 		bgColor = "rgba(0,0,0,0)"
 	}
 
-	html := fmt.Sprintf(`
-<!DOCTYPE html>
-<html>
+	// 检测是否为Mermaid SVG
+	isMermaid := strings.Contains(svgContent, "mermaid") || strings.Contains(svgContent, "flowchart")
+
+	var html string
+	if isMermaid {
+		// Mermaid专用模板 - 强制显示所有元素
+		html = fmt.Sprintf(`<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: %s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .svg-container {
-            width: %dpx;
-            height: %dpx;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        svg {
-            max-width: 100%%;
-            max-height: 100%%;
-            width: auto;
-            height: auto;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mermaid SVG Renderer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 10px;
+      background-color: %s;
+      font-family: "trebuchet ms", verdana, arial, sans-serif;
+      width: %dpx;
+      height: auto;
+      min-height: %dpx;
+      overflow: visible;
+    }
+    svg {
+      width: %dpx !important;
+      height: auto !important;
+      display: block;
+      margin: 0;
+    }
+    /* 强制显示所有SVG元素 */
+    svg * {
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    /* 强制文本可见 */
+    svg text, svg span, svg foreignObject, .nodeLabel, .edgeLabel {
+      fill: #000 !important;
+      color: #000 !important;
+      opacity: 1 !important;
+    }
+    /* 强制形状可见 */
+    svg rect, svg polygon, svg path, svg circle, svg ellipse {
+      stroke: #333 !important;
+      stroke-width: 2px !important;
+      opacity: 1 !important;
+    }
+    /* 背景矩形 */
+    svg rect {
+      fill: #f9f9f9 !important;
+    }
+    /* 连接线 */
+    svg path {
+      stroke: #333 !important;
+      fill: none !important;
+    }
+  </style>
 </head>
 <body>
-    <div class="svg-container">
-        %s
-    </div>
+  %s
 </body>
-</html>`, bgColor, width, height, svgContent)
+</html>`, bgColor, width, height, width-20, svgContent)
+	} else {
+		// 普通SVG模板
+		html = fmt.Sprintf(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SVG Renderer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: %s;
+      font-family: "trebuchet ms", verdana, arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  %s
+</body>
+</html>`, bgColor, svgContent)
+	}
 
 	return html
 }
@@ -260,7 +355,7 @@ func convertSVGToPNGBrowser(svgContent, outputPath string, opts *ConvertOptions)
 	ctx, cancel = context.WithTimeout(ctx, time.Duration(opts.BrowserTimeout)*time.Second)
 	defer cancel()
 
-	// 计算视口尺寸
+	// 计算视口尺寸 - 确保足够大以包含整个SVG
 	width := opts.Width
 	height := opts.Height
 	if width == 0 {
@@ -272,12 +367,16 @@ func convertSVGToPNGBrowser(svgContent, outputPath string, opts *ConvertOptions)
 	width = int(float64(width) * opts.Scale)
 	height = int(float64(height) * opts.Scale)
 
+	// 为复杂SVG预留更大的视口空间
+	viewportWidth := width + 100
+	viewportHeight := height + 200
+
 	var buf []byte
 	err := chromedp.Run(ctx,
-		chromedp.EmulateViewport(int64(width), int64(height)),
+		chromedp.EmulateViewport(int64(viewportWidth), int64(viewportHeight)),
 		chromedp.Navigate("data:text/html,"+htmlContent),
-		chromedp.WaitVisible(".svg-container", chromedp.ByQuery),
-		chromedp.Sleep(1*time.Second), // 等待渲染完成
+		chromedp.WaitVisible("svg", chromedp.ByQuery),
+		chromedp.Sleep(3*time.Second), // 等待SVG完全渲染
 		chromedp.FullScreenshot(&buf, 90),
 	)
 
